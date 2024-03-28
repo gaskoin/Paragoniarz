@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Paragoniarz.UI"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
+        Width="700" Height="500"
+        x:Class="Paragoniarz.UI.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/receipt.ico"
+        Background="DimGray"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="Paragoniarz"
+        WindowStartupLocation="CenterOwner">
+    <!--ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome" -->
+    <Grid>
+        <ContentControl Content="{Binding ContentViewModel}" />
+        <Button Classes="icon" VerticalAlignment="Top" HorizontalAlignment="Right" x:CompileBindings="False" Command="{Binding OpenConfiguration}">
+            <PathIcon Data="{StaticResource settings_regular}"/>
+        </Button>
+    </Grid>
+</Window>

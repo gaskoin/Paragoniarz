@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Paragoniarz.UI"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="450"
+             x:Class="Paragoniarz.UI.ProcessingView"
+             x:DataType="vm:ProcessingViewModel">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="15, *">
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding IsFileRead}" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="5" Text="Wczytywanie pliku"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreDocumentsGenerated}"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="5" Text="Generowanie dokumentów"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreMessagesSent}"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5" Text="Wysyłanie wiadomości"/>
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Margin="10" IsEnabled="{Binding AreDocumentsGenerated}" Command="{Binding OpenDocumentsLocationCommand}" Content="Pokaż"></Button>
+            <Button Margin="10" Command="{Binding SendEmailsCommand}" Content="Wyślij"></Button>
+        </StackPanel>
+
+        <ProgressBar Grid.Row="4" Grid.ColumnSpan="2" Margin="0 50" Height="20"
+                Minimum="0" Maximum="100" Foreground="DeepSkyBlue" Value="{Binding Progress}" ShowProgressText="True"/>
+    </Grid>
+</UserControl>

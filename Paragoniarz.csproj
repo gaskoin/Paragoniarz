@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>Assets\receipt.ico</ApplicationIcon>
+    <StartupObject></StartupObject>
+    <Trimming></Trimming>
+    <SignAssembly>False</SignAssembly>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Remove="Assets\email_template.txt" />
+    <AvaloniaResource Remove="Assets\logo.png" />
+    <AvaloniaResource Remove="Assets\row_template.html" />
+    <AvaloniaResource Remove="Assets\template.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\email_template.txt" />
+    <None Remove="Assets\logo.png" />
+    <None Remove="Assets\row_template.html" />
+    <None Remove="Assets\template.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\receipt.ico" />
+    <Content Include="Assets\email_template.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\row_template.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\template.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.9" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.9" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.9" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.9" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.9" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="itext7" Version="8.0.3" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.3" />
+    <PackageReference Include="itext7.pdfhtml" Version="5.0.3" />
+    <PackageReference Include="log4net" Version="2.0.17" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="UI\ProcessingView.axaml.cs">
+      <DependentUpon>ProcessingView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="UI\FileSelectorView.axaml.cs">
+      <DependentUpon>FileSelectorView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="UI\ErrorView.axaml.cs">
+      <DependentUpon>ErrorView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

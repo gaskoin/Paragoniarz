@@ -1,0 +1,18 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Paragoniarz.App"
+             xmlns:local="using:Paragoniarz.UI"
+             RequestedThemeVariant="Dark">  
+    <Application.Resources>
+        <FontFamily x:Key="ContentControlThemeFontFamily">fonts:Inter#Inter, $Default</FontFamily>
+    </Application.Resources>
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Paragoniarz/UI/Icons.axaml" />
+    </Application.Styles>
+</Application>

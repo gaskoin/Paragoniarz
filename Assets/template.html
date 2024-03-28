@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+          font-size: 12px;
+          font-family: Arial;
+          line-height: 1.6;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        table tr td {
+          padding: 0;
+        }
+
+        table tr td:last-child {
+          text-align: right;
+        }
+
+        .title {
+          font-weight: bold;
+          font-size: 3em;
+          text-align: right;
+        }
+
+        .buyer-seller-info {
+          margin-top: 50px;
+        }
+
+        .bold {
+          font-weight: bold;
+        }
+
+        .right {
+          text-align: right;
+        }
+
+        .logo-container {
+          float: left;
+        }
+
+        .logo-container img {
+          height: 150px;
+        }
+
+        .clearfix::after {
+          display: block;
+          content: "";
+          clear: both;
+        }
+
+        .invoice-info-container {
+          font-size: 0.875em;
+        }
+
+        .invoice-info-container td {
+          padding: 4px 0;
+        }
+
+        .buyer-seller {
+          font-size: 1.2em;
+          font-weight: bold;
+          vertical-align: top;
+        }
+
+        .line-items-container {
+          margin: 100px 0;
+          font-size: 0.875em;
+        }
+
+        .line-items-container th {
+          text-align: left;
+          border-bottom: 2px solid black;
+          padding: 10px 0 10px 0;
+          font-size: 0.75em;
+          text-transform: uppercase;
+        }
+
+        .line-items-container th:last-child {
+          text-align: right;
+        }
+
+        .line-items-container td {
+          padding: 4px 0;
+        }
+
+        .line-items-container tbody tr:first-child td {
+          padding-top: 10px;
+        }
+
+        .line-items-container th.heading-quantity {
+          text-align: right;
+          width: 50px;
+        }
+
+        .line-items-container th.heading-tax {
+            text-align: right;
+            width: 50px;
+        }
+
+        .line-items-container th.heading-price {
+          text-align: right;
+          width: 75px;
+        }
+
+        .product td {
+          border-bottom: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="clearfix">
+    <div class="logo-container">
+        <img src="logo.png">
+    </div>
+
+    <div class="title">Potwierdzenie zakupu</div>
+
+    <div style="position: relative;">
+        <div style="float: right;">
+            <strong>${seller.city}</strong><br>
+            <strong>${orderDate}</strong><br>
+            <strong>${confirmationDate}</strong>
+        </div>
+
+        <div style="float: right; margin-right: 20px;">
+            Miejsce wystawienia<br>
+            Data sprzedaży<br>
+            Data wystawienia
+        </div>
+    </div>
+</div>
+
+<div class="buyer-seller-info clearfix">
+    <div style="float: left; padding-right: 30px;">
+        <span class="buyer-seller">Sprzedawca</span><br/>
+    </div>
+
+    <div style="float: left; padding-left: 10px; border-left: 1px solid black;">
+        ${seller.name}<br />
+        ${seller.address}<br />
+        ${seller.zipCode} ${seller.city}<br />
+        NIP: ${seller.nip}
+    </div>
+
+    <div style="float: right; border-left: 1px solid #000; padding-left: 10px;">
+        ${firstName} ${lastName}<br/>
+        ${street}<br/>
+        ${postcode} ${city}
+    </div>
+
+    <div style="float: right; padding-right: 30px;">
+        <span class="buyer-seller">Nabywca</span><br/>
+    </div>
+</div>
+
+<table class="line-items-container">
+    <thead>
+    <tr>
+        <th class="heading-description">Nazwa</th>
+        <th class="heading-quantity">Ilość</th>
+        <th class="heading-price">Cena Netto</th>
+        <th class="heading-tax">VAT</th>
+        <th class="heading-price">Cena z VAT</th>
+        <th class="heading-price">Wartość z VAT</th>
+    </tr>
+    </thead>
+    <tbody>
+    ${rows}
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="right bold">Dostawa</td>
+        <td class="bold">${shipmentPrice}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="right bold">Razem</td>
+        <td class="bold">${totalPrice}</td>
+    </tr>
+    </tbody>
+</table>
+
+<div style="float: right;">
+    <strong>${shipment}</strong><br>
+    <strong>${paymentType}</strong>
+</div>
+
+<div style="float: right; margin-right: 20px;">
+    Rodzaj dostawy<br>
+    Sposób płatności
+</div>
+</body>
