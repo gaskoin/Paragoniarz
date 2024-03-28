@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace Paragoniarz.UI;
 
-public partial class ErrorView : UserControl
+public partial class ErrorWindow : Window
 {
-    public ErrorView()
+    public ErrorWindow()
     {
         InitializeComponent();
     }

@@ -28,14 +28,20 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
     [ObservableProperty]
     private int progress = 0;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SelectNewFileCommand))]
+    private bool isDuringProcessing = false;
+
     private readonly string documentsDirectory = configurationService.LoadConfiguration().DocumentsDirectory;
     private OrderSummary? orderSummary;
 
+    public void ProcessFile(Uri uri) => Task.Run(() => ProcessFileAsync(uri));
 
-    public async Task ProcessFile(Uri uri)
+    private async Task ProcessFileAsync(Uri uri)
     {
         try
         {
+            Dispatcher.UIThread.Post(() => IsDuringProcessing = true);
             orderSummary = await orderSummaryService.ReadFile(uri);
             Dispatcher.UIThread.Post(() => IsFileRead = true);
 
@@ -46,6 +52,8 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         {
             messenger.Send(new ErrorMessage(e));
         }
+
+        Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
     }
 
     [RelayCommand]
@@ -63,19 +71,28 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
     {
         try
         {
+            Dispatcher.UIThread.Post(() => IsDuringProcessing = true);
             Progress = 0;
-            IProgress<int> progress = new Progress<int>(UpdateProgress);
             await emailService.SendEmails(orderSummary!, new Progress<int>(UpdateProgress));
-
             Dispatcher.UIThread.Post(() => AreMessagesSent = true);
         }
         catch (Exception e)
         {
             messenger.Send(new ErrorMessage(e));
         }
+
+        Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSelectNewFile))]
+    public async Task SelectNewFile()
+    {
+        messenger.Send(new SelectNewFileMessage());
     }
 
     private bool CanSendEmail() => AreDocumentsGenerated && !AreMessagesSent;
+
+    private bool CanSelectNewFile() => !IsDuringProcessing;
 
     private void UpdateProgress(int value) => Dispatcher.UIThread.Post(() => Progress += 100 / orderSummary!.Orders.Count());
 }

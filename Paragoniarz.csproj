@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Remove="Assets\email_template.txt" />
     <None Remove="Assets\logo.png" />
+    <None Remove="Assets\receipt.ico" />
     <None Remove="Assets\row_template.html" />
     <None Remove="Assets\template.html" />
   </ItemGroup>
@@ -35,7 +36,7 @@
     <Content Include="Assets\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\receipt.ico" />
+    <Content Include="Assets\receipt.iconn" />
     <Content Include="Assets\email_template.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -64,14 +65,14 @@
 
 
   <ItemGroup>
+    <Compile Update="UI\ErrorWindow.axaml.cs">
+      <DependentUpon>ErrorWindow.axaml</DependentUpon>
+    </Compile>
     <Compile Update="UI\ProcessingView.axaml.cs">
       <DependentUpon>ProcessingView.axaml</DependentUpon>
     </Compile>
     <Compile Update="UI\FileSelectorView.axaml.cs">
       <DependentUpon>FileSelectorView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="UI\ErrorView.axaml.cs">
-      <DependentUpon>ErrorView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

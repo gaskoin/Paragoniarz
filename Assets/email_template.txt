@@ -1,6 +1,9 @@
 Witaj ${firstName}!
 
-W załączniku potwierdzenie Twojego zamówienia
+Miło nam jest poinformować, że Twoja paczka za chwilę wyrusza już w drogę i wkrótce, po zwiedzeniu kilku fajnych miejsc, powinna być u Ciebie.
+
+Dziękujemy serdecznie, że obdarzyłeś zaufaniem naszą firmę.
+Dołożymy wszelkich starań, aby zakupy u nas były samą przyjemnością.
 
 Pozdrawiamy,
-Zespół Worst-Future!
+Zespół Bestfuture_sklep!

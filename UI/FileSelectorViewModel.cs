@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
@@ -33,6 +32,6 @@ public partial class FileSelectorViewModel(IStorageProvider storageProvider, IMe
             return;
 
         var path = items.First().Path;
-        messenger.Send(new FileChosenMessage(path));
+        messenger.Send(new FileSelectedMessage(path));
     }
 }

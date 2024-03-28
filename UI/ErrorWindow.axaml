@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Paragoniarz.UI"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="800" Height="400"
+        x:Name="DialogWindow"
+        Background="DimGray"
+        x:Class="Paragoniarz.UI.ErrorWindow"
+        x:DataType="vm:ErrorWindowViewModel"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        WindowStartupLocation="CenterOwner">
+    <Panel>
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto, *, Auto">
+            <TextBlock Grid.Row="0" Margin="10" HorizontalAlignment="Center" FontSize="20" Foreground="Red" Text="Błąd"/>
+            <TextBox Grid.Row="1" AcceptsReturn="True" Margin="10" IsReadOnly="True" Text="{Binding ThrownException}" x:CompileBindings="False"/>
+            <Button Grid.Row="2" HorizontalAlignment="Right" Margin="10" Content="Zamknij" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=DialogWindow}" x:CompileBindings="False"/>
+        </Grid>
+    </Panel>
+</Window>

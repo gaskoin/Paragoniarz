@@ -6,22 +6,26 @@
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="450"
              x:Class="Paragoniarz.UI.ProcessingView"
              x:DataType="vm:ProcessingViewModel">
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="15, *">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="15, *, Auto">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding IsFileRead}" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="5" Text="Wczytywanie pliku"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="10" Text="Wczytywanie pliku"/>
+        <Button Grid.Row="0" Grid.Column="2" Classes="icon" Command="{Binding SelectNewFileCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Wybierz nowy plik">
+            <PathIcon Data="{StaticResource folder_add_regular}"/>
+        </Button>
 
         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreDocumentsGenerated}"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="5" Text="Generowanie dokumentów"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="10" Text="Generowanie dokumentów"/>
+        <Button Grid.Row="1" Grid.Column="2" Classes="icon" IsEnabled="{Binding AreDocumentsGenerated}" Command="{Binding OpenDocumentsLocationCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Pokaż dokumenty">
+            <PathIcon Data="{StaticResource folder_regular}"/>
+        </Button>
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreMessagesSent}"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5" Text="Wysyłanie wiadomości"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="10" Text="Wysyłanie wiadomości"/>
+        <Button Grid.Row="2" Grid.Column="2" Classes="icon" Command="{Binding SendEmailsCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Wyślij wiadomości">
+            <PathIcon Data="{StaticResource mail_regular}"/>
+        </Button>
 
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Margin="10" IsEnabled="{Binding AreDocumentsGenerated}" Command="{Binding OpenDocumentsLocationCommand}" Content="Pokaż"></Button>
-            <Button Margin="10" Command="{Binding SendEmailsCommand}" Content="Wyślij"></Button>
-        </StackPanel>
-
-        <ProgressBar Grid.Row="4" Grid.ColumnSpan="2" Margin="0 50" Height="20"
+        <ProgressBar Grid.Row="3" Grid.ColumnSpan="3" Margin="0 25" Height="20"
                 Minimum="0" Maximum="100" Foreground="DeepSkyBlue" Value="{Binding Progress}" ShowProgressText="True"/>
     </Grid>
 </UserControl>

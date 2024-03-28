@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
-        Width="700" Height="500"
+        Width="600" Height="500"
         x:Class="Paragoniarz.UI.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/receipt.ico"
@@ -16,7 +16,7 @@
         ExtendClientAreaChromeHints="NoChrome" -->
     <Grid>
         <ContentControl Content="{Binding ContentViewModel}" />
-        <Button Classes="icon" VerticalAlignment="Top" HorizontalAlignment="Right" x:CompileBindings="False" Command="{Binding OpenConfiguration}">
+        <Button Classes="icon" VerticalAlignment="Top" HorizontalAlignment="Right" x:CompileBindings="False" Command="{Binding OpenConfiguration}" ToolTip.ShowDelay="100" ToolTip.Tip="Ustawienia">
             <PathIcon Data="{StaticResource settings_regular}"/>
         </Button>
     </Grid>

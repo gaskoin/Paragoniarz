@@ -5,8 +5,10 @@ namespace Paragoniarz.Domain.Settings
 {
     public record Configuration(EmailConfiguration EmailConfiguration, SellerConfiguration SellerConfiguration)
     {
-        public string AssetsDirectory { get { return GetAssetsDirectory(); } }
-        public string DocumentsDirectory { get { return GetDocumentsDirectory(); } }
+        public string AssetsDirectory => GetAssetsDirectory();
+        public string DocumentsDirectory => GetDocumentsDirectory();
+
+        public bool IsLocked { get; set; }
 
         public static Configuration CreateDefault()
         {

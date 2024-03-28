@@ -7,50 +7,65 @@
              x:DataType="vm:SettingsViewModel"
              x:Class="Paragoniarz.UI.SettingsView">
     <ScrollViewer>
-        <StackPanel>
-            <Grid Margin="10" ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Ustawienia Email"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Temat"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.Subject}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Adres Nadawcy"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.FromAddress}"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa Nadawcy"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.FromName}"/>
-                <TextBlock Grid.Row="4" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Użytkownik"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.User}"/>
-                <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Hasło"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Margin="10" VerticalAlignment="Center" PasswordChar="*" Text="{Binding EmailConfiguration.Password}"/>
-                <TextBlock Grid.Row="6" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Host IMAP"/>
-                <TextBox Grid.Row="6" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.ImapHost}"/>
-                <TextBlock Grid.Row="7" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Port IMAP"/>
-                <NumericUpDown Grid.Row="7" Grid.Column="1" Margin="10" VerticalAlignment="Center" FormatString="0" Value="{Binding EmailConfiguration.ImapPort}"/>
-                <TextBlock Grid.Row="8" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Host SMTP"/>
-                <TextBox Grid.Row="8" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.SmtpHost}"/>
-                <TextBlock Grid.Row="9" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Port SMTP"/>
-                <NumericUpDown Grid.Row="9" Grid.Column="1" Margin="10" VerticalAlignment="Center" FormatString="0" Value="{Binding EmailConfiguration.SmtpPort}"/>
-                <TextBlock Grid.Row="10" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Używaj nazwy odbiorcy"/>
-                <CheckBox Grid.Row="10" Grid.Column="1" Margin="10" VerticalAlignment="Center" IsChecked="{Binding EmailConfiguration.UseRecipientName}"/>
-                <TextBlock Grid.Row="11" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Wysyłaj maile do siebie"/>
-                <CheckBox Grid.Row="11" Grid.Column="1" Margin="10" VerticalAlignment="Center" IsChecked="{Binding EmailConfiguration.SendAllEmailsToSelf}"/>
-            </Grid>
+        <Grid>
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 50 0">
+                <Button Classes="icon" Command="{Binding ToggleLockCommand}" IsVisible="{Binding !IsLocked}" ToolTip.ShowDelay="100" ToolTip.Tip="Zablokuj ustawienia">
+                    <PathIcon Data="{StaticResource lock_regular}"/>
+                </Button>
+                <Button Classes="icon" Command="{Binding ToggleLockCommand}" IsVisible="{Binding IsLocked}" ToolTip.ShowDelay="100" ToolTip.Tip="Odblokuj ustawienia">
+                    <PathIcon Data="{StaticResource unlock_regular}"/>
+                </Button>
+            </StackPanel>
+            <StackPanel>
+                <Grid Margin="10" ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Ustawienia Email"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Temat"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.Subject}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Adres Nadawcy"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="2" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.FromAddress}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa Nadawcy"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="3" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.FromName}"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Użytkownik"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="4" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.User}"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Hasło"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="5" Grid.Column="1" Margin="10" VerticalAlignment="Center" PasswordChar="{Binding PasswordMaskSymbol}" Text="{Binding EmailConfiguration.Password}"/>
+                    <Button Classes="icon" IsEnabled="True" Grid.Row="5" Grid.Column="2" Margin="10" Command="{Binding TogglePasswordCommand}" IsVisible="{Binding !IsPasswordVisible}">
+                        <PathIcon Data="{StaticResource eye_show_regular}"/>
+                    </Button>
+                    <Button Classes="icon" Grid.Row="5" Grid.Column="2" Margin="10" Command="{Binding TogglePasswordCommand}" IsVisible="{Binding IsPasswordVisible}">
+                        <PathIcon Data="{StaticResource eye_hide_regular}"/>
+                    </Button>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Host IMAP"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="6" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.ImapHost}"/>
+                    <TextBlock Grid.Row="7" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Port IMAP"/>
+                    <NumericUpDown IsReadOnly="{Binding IsLocked}" Grid.Row="7" Grid.Column="1" Margin="10" VerticalAlignment="Center" FormatString="0" Value="{Binding EmailConfiguration.ImapPort}"/>
+                    <TextBlock Grid.Row="8" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Host SMTP"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="8" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.SmtpHost}"/>
+                    <TextBlock Grid.Row="9" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Port SMTP"/>
+                    <NumericUpDown IsReadOnly="{Binding IsLocked}" Grid.Row="9" Grid.Column="1" Margin="10" VerticalAlignment="Center" FormatString="0" Value="{Binding EmailConfiguration.SmtpPort}"/>
+                    <TextBlock Grid.Row="10" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Używaj nazwy odbiorcy"/>
+                    <CheckBox IsEnabled="{Binding !IsLocked}" Grid.Row="10" Grid.Column="1" Margin="10" VerticalAlignment="Center" IsChecked="{Binding EmailConfiguration.UseRecipientName}"/>
+                    <TextBlock Grid.Row="11" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Wysyłaj maile do siebie"/>
+                    <CheckBox IsEnabled="{Binding !IsLocked}" Grid.Row="11" Grid.Column="1" Margin="10" VerticalAlignment="Center" IsChecked="{Binding EmailConfiguration.SendAllEmailsToSelf}"/>
+                </Grid>
 
-            <Rectangle HorizontalAlignment="Stretch" Height="1" Margin="2" Stroke="Yellow" Fill="White"/>
-            
-            <Grid Margin="10" ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Ustawienia Sprzedawcy"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa sprzedawcy"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.Name}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Ulica"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.Address}"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa Kod pocztowy"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.ZipCode}"/>
-                <TextBlock Grid.Row="4" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Miasto"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.City}"/>
-                <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="NIP"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.NIP}"/>
-                <Button Grid.Row="5" Grid.Column="2" Content="Ok" Command="{Binding CloseCommand}" x:CompileBindings="False" />
-            </Grid>
-        </StackPanel>
+                <Rectangle HorizontalAlignment="Stretch" Height="1" Margin="2" Stroke="Yellow" Fill="White"/>
 
+                <Grid Margin="10" ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Ustawienia Sprzedawcy"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa sprzedawcy"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.Name}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Ulica"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="2" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.Address}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Nazwa Kod pocztowy"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="3" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.ZipCode}"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Miasto"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="4" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.City}"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="NIP"/>
+                    <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="5" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding SellerConfiguration.NIP}"/>
+                    <Button Grid.Row="5" Grid.Column="2" Content="Ok" Command="{Binding CloseCommand}" x:CompileBindings="False" />
+                </Grid>
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </UserControl>
