@@ -50,7 +50,7 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         }
         catch (Exception e)
         {
-            messenger.Send(new ErrorMessage(e));
+            Dispatcher.UIThread.Post(() => messenger.Send(new ErrorMessage(e)));
         }
 
         Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
