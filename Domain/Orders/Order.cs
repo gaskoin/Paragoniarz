@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Paragoniarz.Domain.Orders;
 
-#nullable disable
 public partial class Order
 {
     private readonly List<Product> products = [];
@@ -46,4 +45,3 @@ public partial class Order
         return HashCode.Combine(Id);
     }
 }
-#nullable enable

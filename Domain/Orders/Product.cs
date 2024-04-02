@@ -6,9 +6,4 @@ public record Product(string? ProductName, int? Quantity, decimal? NetPrice, dec
     {
         get { return Quantity * UnitPrice; }
     }
-
-    public string OrderId
-    {
-        get { return ""; }
-    }
 }

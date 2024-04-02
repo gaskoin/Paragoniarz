@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using log4net;
 using MailKit;
@@ -38,11 +40,9 @@ public class EmailService(IConfigurationService configurationService) : IEmailSe
 
         log.Info($"Disconnecting from SMTP");
         await smtpClient.DisconnectAsync(true);
-        smtpClient.Dispose();
 
         log.Info($"Disconnecting from IMAP");
         await imapClient.DisconnectAsync(true);
-        imapClient.Dispose();
     }
 
     private MimeMessage CreateMessage(string emailTemplate, Order order, Configuration config)
@@ -59,11 +59,14 @@ public class EmailService(IConfigurationService configurationService) : IEmailSe
 
         // TODO: Create document class instead of building path
         string attachment = $"{config.DocumentsDirectory}/potwierdzenie_{order.Id}.pdf";
-        string textBody = emailTemplate.Replace("${firstName}", order.Buyer.FirstName);
+        string subject = emailConfig.Subject.Replace("${orderId}", order.Id);
+        string textBody = emailTemplate.Replace("${firstName}", order.Buyer.FirstName)
+                                       .Replace("${lastName}", order.Buyer.LastName)
+                                       .Replace("${orderId}", order.Id);
 
         return new MimeMessage().WithFrom(emailConfig.FromName, emailConfig.FromAddress)
                                 .WithTo(recipientName, recipientAddress)
-                                .WithSubject(emailConfig.Subject)
+                                .WithSubject(subject)
                                 .WithBody(
                                     new BodyBuilder().WithAttachment(attachment)
                                                      .WithTextBody(textBody)
@@ -74,20 +77,29 @@ public class EmailService(IConfigurationService configurationService) : IEmailSe
     private async Task<ImapClient> GetImapClient(EmailConfiguration config)
     {
         log.Info($"Connecting to IMAP at {config.ImapHost}:{config.ImapPort}");
-
-        var client = new ImapClient();
-        await client.ConnectAsync(config.ImapHost, config.ImapPort, true);
-        await client.AuthenticateAsync(config.User, config.Password);
-        return client;
+        return await SetupClient(new ImapClient(), config.ImapHost, config.ImapPort, config);
     }
 
     private async Task<SmtpClient> GetSmtpClient(EmailConfiguration config)
     {
         log.Info($"Connecting to SMTP at {config.SmtpHost}:{config.SmtpPort}");
+        return await SetupClient(new SmtpClient(), config.SmtpHost, config.SmtpPort, config);
+    }
 
-        var client = new SmtpClient();
-        await client.ConnectAsync(config.SmtpHost, config.SmtpPort, true);
+    private async Task<T> SetupClient<T>(T client, String host, int port, EmailConfiguration config) where T : IMailService
+    {
+        await client.ConnectAsync(host, port, true);
         await client.AuthenticateAsync(config.User, config.Password);
+        client.ServerCertificateValidationCallback = CertificateValidationCallback;
         return client;
+    }
+
+    private bool CertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+    {
+        if (sslPolicyErrors == SslPolicyErrors.None)
+            return true;
+
+        log.Error($"Certificate error: {sslPolicyErrors}");
+        return false;
     }
 }
