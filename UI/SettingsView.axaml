@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Paragoniarz.UI"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
              x:DataType="vm:SettingsViewModel"
              x:Class="Paragoniarz.UI.SettingsView">
@@ -10,10 +11,10 @@
         <Grid>
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 50 0">
                 <Button Classes="icon" Command="{Binding ToggleLockCommand}" IsVisible="{Binding !IsLocked}" ToolTip.ShowDelay="100" ToolTip.Tip="Zablokuj ustawienia">
-                    <PathIcon Data="{StaticResource lock_regular}"/>
+                    <icons:MaterialIcon Kind="Lock" Width="30" Height="30"/>
                 </Button>
                 <Button Classes="icon" Command="{Binding ToggleLockCommand}" IsVisible="{Binding IsLocked}" ToolTip.ShowDelay="100" ToolTip.Tip="Odblokuj ustawienia">
-                    <PathIcon Data="{StaticResource unlock_regular}"/>
+                    <icons:MaterialIcon Kind="Unlocked" Width="30" Height="30"/>
                 </Button>
             </StackPanel>
             <StackPanel>
@@ -30,10 +31,10 @@
                     <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Hasło"/>
                     <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="5" Grid.Column="1" Margin="10" VerticalAlignment="Center" PasswordChar="{Binding PasswordMaskSymbol}" Text="{Binding EmailConfiguration.Password}"/>
                     <Button Classes="icon" IsEnabled="True" Grid.Row="5" Grid.Column="2" Margin="10" Command="{Binding TogglePasswordCommand}" IsVisible="{Binding !IsPasswordVisible}">
-                        <PathIcon Data="{StaticResource eye_show_regular}"/>
+                        <icons:MaterialIcon Kind="Eye" Width="30" Height="30"/>
                     </Button>
                     <Button Classes="icon" Grid.Row="5" Grid.Column="2" Margin="10" Command="{Binding TogglePasswordCommand}" IsVisible="{Binding IsPasswordVisible}">
-                        <PathIcon Data="{StaticResource eye_hide_regular}"/>
+                        <icons:MaterialIcon Kind="EyeOff" Width="30" Height="30"/>
                     </Button>
                     <TextBlock Grid.Row="6" Grid.Column="0" Margin="10" VerticalAlignment="Center" Text="Host IMAP"/>
                     <TextBox IsReadOnly="{Binding IsLocked}" Grid.Row="6" Grid.Column="1" Margin="10" VerticalAlignment="Center" Text="{Binding EmailConfiguration.ImapHost}"/>

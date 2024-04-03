@@ -29,8 +29,20 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
     private int progress = 0;
 
     [ObservableProperty]
+    private int maxProgress = 100;
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SelectNewFileCommand))]
     private bool isDuringProcessing = false;
+
+    [ObservableProperty]
+    private bool isReadingFile = false;
+
+    [ObservableProperty]
+    private bool isGeneratingDocuments = false;
+
+    [ObservableProperty]
+    private bool isSendingEmails = false;
 
     private readonly string documentsDirectory = configurationService.LoadConfiguration().DocumentsDirectory;
     private OrderSummary? orderSummary;
@@ -42,9 +54,13 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         try
         {
             Dispatcher.UIThread.Post(() => IsDuringProcessing = true);
+            Dispatcher.UIThread.Post(() => IsReadingFile = true);
             orderSummary = await orderSummaryService.ReadFile(uri);
             Dispatcher.UIThread.Post(() => IsFileRead = true);
+            Dispatcher.UIThread.Post(() => IsReadingFile = false);
 
+            Dispatcher.UIThread.Post(() => IsGeneratingDocuments = true);
+            Dispatcher.UIThread.Post(() => MaxProgress = orderSummary!.Orders.Count());
             orderSummary = await documentService.GenerateDocuments(orderSummary, new Progress<int>(UpdateProgress));
             Dispatcher.UIThread.Post(() => AreDocumentsGenerated = true);
         }
@@ -52,8 +68,12 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         {
             Dispatcher.UIThread.Post(() => messenger.Send(new ErrorMessage(e)));
         }
-
-        Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
+        finally
+        {
+            Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
+            Dispatcher.UIThread.Post(() => IsReadingFile = false);
+            Dispatcher.UIThread.Post(() => IsGeneratingDocuments = false);
+        }
     }
 
     [RelayCommand]
@@ -72,6 +92,7 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         try
         {
             Dispatcher.UIThread.Post(() => IsDuringProcessing = true);
+            Dispatcher.UIThread.Post(() => IsSendingEmails = true);
             Progress = 0;
             await emailService.SendEmails(orderSummary!, new Progress<int>(UpdateProgress));
             Dispatcher.UIThread.Post(() => AreMessagesSent = true);
@@ -80,12 +101,15 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
         {
             messenger.Send(new ErrorMessage(e));
         }
-
-        Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
+        finally
+        {
+            Dispatcher.UIThread.Post(() => IsDuringProcessing = false);
+            Dispatcher.UIThread.Post(() => IsSendingEmails = false);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanSelectNewFile))]
-    public async Task SelectNewFile()
+    public void SelectNewFile()
     {
         messenger.Send(new SelectNewFileMessage());
     }
@@ -94,5 +118,5 @@ public partial class ProcessingViewModel(IMessenger messenger, IConfigurationSer
 
     private bool CanSelectNewFile() => !IsDuringProcessing;
 
-    private void UpdateProgress(int value) => Dispatcher.UIThread.Post(() => Progress += 100 / orderSummary!.Orders.Count());
+    private void UpdateProgress(int value) => Dispatcher.UIThread.Post(() => Progress += 1);
 }

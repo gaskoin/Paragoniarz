@@ -1,8 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="Paragoniarz.App"
              xmlns:local="using:Paragoniarz.UI"
-             RequestedThemeVariant="Dark">  
+             RequestedThemeVariant="Dark">
     <Application.Resources>
         <FontFamily x:Key="ContentControlThemeFontFamily">fonts:Inter#Inter, $Default</FontFamily>
     </Application.Resources>
@@ -10,9 +11,11 @@
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-  
+
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://Paragoniarz/UI/Icons.axaml" />
+        <icons:MaterialIconStyles />
+        <StyleInclude Source="avares://Paragoniarz/UI/Styles.axaml" />
+        <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
     </Application.Styles>
 </Application>

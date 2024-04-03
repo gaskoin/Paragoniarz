@@ -2,30 +2,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ring="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:vm="using:Paragoniarz.UI"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="450"
              x:Class="Paragoniarz.UI.ProcessingView"
              x:DataType="vm:ProcessingViewModel">
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="15, *, Auto">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding IsFileRead}" />
+        <ring:ProgressRing Grid.Row="0" Grid.Column="0" Width="20" Height="20" IsActive="True" IsVisible="{Binding IsReadingFile}"/>
         <TextBlock Grid.Row="0" Grid.Column="1" Margin="10" Text="Wczytywanie pliku"/>
         <Button Grid.Row="0" Grid.Column="2" Classes="icon" Command="{Binding SelectNewFileCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Wybierz nowy plik">
-            <PathIcon Data="{StaticResource folder_add_regular}"/>
+            <icons:MaterialIcon Kind="FileDownload" Width="25" Height="25"/>
         </Button>
 
         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreDocumentsGenerated}"/>
+        <ring:ProgressRing Grid.Row="1" Grid.Column="0" Width="20" Height="20" IsActive="True" IsVisible="{Binding IsGeneratingDocuments}"/>
         <TextBlock Grid.Row="1" Grid.Column="1" Margin="10" Text="Generowanie dokumentów"/>
         <Button Grid.Row="1" Grid.Column="2" Classes="icon" IsEnabled="{Binding AreDocumentsGenerated}" Command="{Binding OpenDocumentsLocationCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Pokaż dokumenty">
-            <PathIcon Data="{StaticResource folder_regular}"/>
+            <icons:MaterialIcon Kind="FolderOpen" Width="25" Height="25"/>
         </Button>
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="✓" Foreground="Lime" IsVisible="{Binding AreMessagesSent}"/>
+        <ring:ProgressRing Grid.Row="2" Grid.Column="0" Width="20" Height="20" IsActive="True" IsVisible="{Binding IsSendingEmails}"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Margin="10" Text="Wysyłanie wiadomości"/>
         <Button Grid.Row="2" Grid.Column="2" Classes="icon" Command="{Binding SendEmailsCommand}" ToolTip.ShowDelay="100" ToolTip.Tip="Wyślij wiadomości">
-            <PathIcon Data="{StaticResource mail_regular}"/>
+            <icons:MaterialIcon Kind="EmailArrowRight" Width="25" Height="25"/>
         </Button>
 
         <ProgressBar Grid.Row="3" Grid.ColumnSpan="3" Margin="0 25" Height="20"
-                Minimum="0" Maximum="100" Foreground="DeepSkyBlue" Value="{Binding Progress}" ShowProgressText="True"/>
+                Minimum="0" Maximum="{Binding MaxProgress}" Foreground="DeepSkyBlue" Value="{Binding Progress}" ShowProgressText="True"/>
     </Grid>
 </UserControl>

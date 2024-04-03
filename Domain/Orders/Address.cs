@@ -1,3 +1,8 @@
 ﻿namespace Paragoniarz.Domain.Orders;
 
-public record Address(string? Street, string? ZipCode, string? City);
+public class Address
+{
+    public required string Street { get; set; }
+    public required string ZipCode { get; set; }
+    public required string City { get; set; }
+}

@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using log4net;
 
 namespace Paragoniarz.Domain.Orders;
 public class OrderSummaryService : IOrderSummaryService
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(OrderSummaryService));
-    private static readonly string Preamble = "<orders xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"";
 
     public async Task<OrderSummary> ReadFile(Uri path)
     {
@@ -18,90 +18,56 @@ public class OrderSummaryService : IOrderSummaryService
         if (await path.IsBinaryFileAsync())
             throw new Exception("Cannot process binary file");
 
-        string contents = await File.ReadAllTextAsync(path.LocalPath);
-        return ToOrderSummary(contents);
+        var xml = await File.ReadAllTextAsync(path.LocalPath);
+        return ToOrderSummary(xml);
     }
 
-    private OrderSummary ToOrderSummary(string xmlOrders)
+    private OrderSummary ToOrderSummary(string xml)
     {
-        log.Info("Deserializing orders");
-        if (!Validate(xmlOrders))
-            throw new Exception("Validation exception");
+        Validate(xml);
 
-        XDocument document = XDocument.Parse(xmlOrders);
+        using (var stream = new StringReader(xml))
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Orders));
+            log.Info("Deserializing orders");
+            Orders? orders = serializer.Deserialize(stream) as Orders;
 
-        return new OrderSummary(
-            ExtractDate(document),
-            ExtractElements(document).Select(item => new Item(MapToOrder(item), MapToProduct(item)))
-                                     .Aggregate(new Dictionary<string, Order>(), AccumulateOrders, map => map.Values)
-        );
+            return new OrderSummary(
+                orders!.Date!.Value,
+                orders.Items.Aggregate(new Dictionary<string, Order>(), AccumulateOrders, map => map.Values)
+            );
+        }
     }
 
-    private bool Validate(string contents) => contents.Contains(Preamble);
-
-    private Order MapToOrder(XElement item)
+    private void Validate(string xml)
     {
-        Address address = MapToAdrress(item);
-        Buyer buyer = MapToBuyer(item, address);
+        List<string> missingFields = [];
+        using (var stream = new StringReader(xml))
+        {
+            var document = XDocument.Load(stream);
 
-        return new Order.OrderBuilder()
-            .WithId(item.GetString("ord_id")!)
-            .WithDate(item.GetDateTime("ord_date"))
-            .WithTotalPrice(item.GetDecimal("total_price"))
-            .WithShipment(item.GetString("shipment"))
-            .WithShipmentPrice(item.GetDecimal("ord_ship_price"))
-            .WithPaymentType(item.GetString("payment"))
-            .WithBuyer(buyer)
-            .Build();
-    }
+            var requiredElements = Item.GetRequiredXmlFields();
+            foreach (var requiredElement in requiredElements)
+            {
+                bool containsElement = document.Descendants(requiredElement).Any();
+                if (!containsElement)
+                    missingFields.Add(requiredElement);
+            }
+        }
 
-    private Address MapToAdrress(XElement item)
-    {
-        return new(
-            item.GetString("ord_street"),
-            item.GetString("ord_code"),
-            item.GetString("ord_city")
-        );
-    }
-
-    private Buyer MapToBuyer(XElement item, Address adrress)
-    {
-        return new Buyer.BuyerBuilder()
-            .WithFirstName(item.GetString("ord_firstname"))
-            .WithLastName(item.GetString("ord_lastname"))
-            .WithEmail(item.GetString("ord_email"))
-            .WithAddress(adrress)
-            .Build();
-    }
-
-    private Product MapToProduct(XElement item)
-    {
-        return new Product(
-            item.GetString("prod_name"),
-            item.GetInt("op_amount"),
-            item.GetDecimal("op_price_net"),
-            item.GetDecimal("op_prod_tax"),
-            item.GetDecimal("op_price")
-        );
+        if (missingFields.Count > 0)
+            throw new ValidationException(missingFields);
     }
 
     private Dictionary<string, Order> AccumulateOrders(Dictionary<string, Order> orders, Item item)
     {
-        Order order = item.Order;
-        if (order.IsValid())
+        if (item.IsOrder())
+        {
+            Order order = item.AsOrder();
             orders.Add(order.Id, order);
+        }
 
-        orders[order.Id].AddProduct(item.Product);
+        orders[item.Id!].AddProduct(item.AsProduct());
         return orders;
-    }
-
-    private DateTime ExtractDate(XDocument document)
-    {
-        return document.Element("orders")!.GetDateTimeAttribute("date");
-    }
-
-    private IEnumerable<XElement> ExtractElements(XDocument document)
-    {
-        return document.Element("orders")!.Elements("item");
     }
 }

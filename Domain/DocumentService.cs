@@ -58,12 +58,12 @@ public class DocumentService(IConfigurationService configurationService) : IDocu
         SellerConfiguration configuration = configurationService.LoadConfiguration().SellerConfiguration;
 
         return template.Replace("${orderId}", order.Id)
-                       .Replace("${orderDate}", order.Date?.ToString("dd'/'MM'/'yyyy"))
-                       .Replace("${firstName}", order.Buyer?.FirstName)
-                       .Replace("${lastName}", order.Buyer?.LastName)
-                       .Replace("${street}", order.Buyer?.InvoiceAddress?.Street)
-                       .Replace("${postcode}", order.Buyer?.InvoiceAddress?.ZipCode)
-                       .Replace("${city}", order.Buyer?.InvoiceAddress?.City)
+                       .Replace("${orderDate}", order.Date.ToString("dd'/'MM'/'yyyy"))
+                       .Replace("${firstName}", order.Buyer.FirstName)
+                       .Replace("${lastName}", order.Buyer.LastName)
+                       .Replace("${street}", order.Buyer.InvoiceAddress.Street)
+                       .Replace("${postcode}", order.Buyer.InvoiceAddress.ZipCode)
+                       .Replace("${city}", order.Buyer.InvoiceAddress.City)
                        .Replace("${shipmentPrice}", order.ShipmentPrice.ToString())
                        .Replace("${totalPrice}", order.TotalPrice.ToString())
                        .Replace("${shipment}", order.Shipment)

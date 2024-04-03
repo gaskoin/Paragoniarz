@@ -12,7 +12,8 @@ public partial class MainWindowViewModel : ObservableObject, IRecipient<FileSele
 
     [ObservableProperty]
     private object contentViewModel;
-    private object previous;
+
+    private object previous = null!;
 
     private readonly IServiceProvider serviceProvider;
     private readonly IMessenger messenger;
